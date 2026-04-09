@@ -1,0 +1,8 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/2026_MT_Kudriavceva_A_E_Lab_1/.vs/2026_MT_Kudriavceva_A_E_Lab_1
+/2026_MT_Kudriavceva_A_E_Lab_1/2026_MT_Kudriavceva_A_E_Lab_1/bin/Debug/net8.0
+/2026_MT_Kudriavceva_A_E_Lab_1/2026_MT_Kudriavceva_A_E_Lab_1/obj

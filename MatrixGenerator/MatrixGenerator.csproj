@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\2026_MT_Kudriavceva_A_E_Lab_2\2026_MT_Kudriavceva_A_E_Lab_2.csproj" />
+    <ProjectReference Include="..\2026_MT_Kudriavceva_A_E_Lab_3\2026_MT_Kudriavceva_A_E_Lab_3.csproj" />
+    <ProjectReference Include="..\MatrixLibrary\MatrixLibrary.csproj" />
+  </ItemGroup>
+
+</Project>

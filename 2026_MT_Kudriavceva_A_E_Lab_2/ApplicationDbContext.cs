@@ -3,18 +3,21 @@
 using Entities;
 using Microsoft.EntityFrameworkCore;
 
-public class ApplicationDbContext : DbContext
+public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+    : DbContext(options)
 {
-    public DbSet<Project> Projects => Set<Project>();
-    public DbSet<PipelineStepExecution> PipelineStepExecutions => Set<PipelineStepExecution>();
-    public DbSet<IssueLog> IssueLogs => Set<IssueLog>();
-    public DbSet<ThreadSpeedMetric> ThreadSpeedMetrics => Set<ThreadSpeedMetric>();
+    public DbSet<Project> Projects => this.Set<Project>();
 
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-        : base(options) { }
+    public DbSet<PipelineStepExecution> PipelineStepExecutions => this.Set<PipelineStepExecution>();
+
+    public DbSet<IssueLog> IssueLogs => this.Set<IssueLog>();
+
+    public DbSet<ThreadSpeedMetric> ThreadSpeedMetrics => this.Set<ThreadSpeedMetric>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        ArgumentNullException.ThrowIfNull(modelBuilder);
+
         modelBuilder.Entity<PipelineStepExecution>()
             .HasOne(e => e.Project)
             .WithMany(p => p.PipelineStepExecutions)

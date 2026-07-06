@@ -3,25 +3,38 @@
 using Data;
 using Entities;
 
-public class UnitOfWork : IUnitOfWork
+public class UnitOfWork(ApplicationDbContext context)
+    : IUnitOfWork, IDisposable
 {
-    private readonly ApplicationDbContext _context;
+    private readonly ApplicationDbContext context = context;
+    private bool disposed;
 
-    public IRepository<Project, int> Projects { get; }
-    public IRepository<PipelineStepExecution, int> PipelineSteps { get; }
-    public IRepository<IssueLog, int> IssueLogs { get; }
-    public IRepository<ThreadSpeedMetric, int> Metrics { get; }
+    public IRepository<Project, int> Projects { get; } = new GenericRepository<Project, int>(context);
 
-    public UnitOfWork(ApplicationDbContext context)
+    public IRepository<PipelineStepExecution, int> PipelineSteps { get; } = new GenericRepository<PipelineStepExecution, int>(context);
+
+    public IRepository<IssueLog, int> IssueLogs { get; } = new GenericRepository<IssueLog, int>(context);
+
+    public IRepository<ThreadSpeedMetric, int> Metrics { get; } = new GenericRepository<ThreadSpeedMetric, int>(context);
+
+    public async Task SaveChangesAsync() => await this.context.SaveChangesAsync(false).ConfigureAwait(false);
+
+    public void Dispose()
     {
-        _context = context;
-        Projects = new GenericRepository<Project, int>(context);
-        PipelineSteps = new GenericRepository<PipelineStepExecution, int>(context);
-        IssueLogs = new GenericRepository<IssueLog, int>(context);
-        Metrics = new GenericRepository<ThreadSpeedMetric, int>(context);
+        this.Dispose(true);
+        GC.SuppressFinalize(this);
     }
 
-    public async Task SaveChangesAsync() => await _context.SaveChangesAsync();
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!this.disposed)
+        {
+            if (disposing)
+            {
+                this.context.Dispose();
+            }
 
-    public void Dispose() => _context.Dispose();
+            this.disposed = true;
+        }
+    }
 }

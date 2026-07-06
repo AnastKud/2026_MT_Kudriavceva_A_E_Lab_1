@@ -10,7 +10,7 @@ public class Project : BaseEntity<int>
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int ProjectId { get; set; }
 
-    public override int Id => ProjectId;
+    public override int Id => this.ProjectId;
 
     [Required]
     [MaxLength(200)]
@@ -20,6 +20,7 @@ public class Project : BaseEntity<int>
     [MaxLength(500)]
     public string FolderPath { get; set; } = string.Empty;
 
-    public virtual ICollection<PipelineStepExecution> PipelineStepExecutions { get; set; }
-        = new List<PipelineStepExecution>();
+    public virtual ICollection<PipelineStepExecution> PipelineStepExecutions { get; }
+        =
+        [];
 }

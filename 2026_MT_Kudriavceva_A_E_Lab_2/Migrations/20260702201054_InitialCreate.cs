@@ -1,9 +1,10 @@
 ﻿using System;
+using System.CodeDom.Compiler;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace _2026_MT_Kudriavceva_A_E_Lab_2.Migrations
+namespace Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration
@@ -11,6 +12,8 @@ namespace _2026_MT_Kudriavceva_A_E_Lab_2.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            ArgumentNullException.ThrowIfNull(migrationBuilder);
+
             migrationBuilder.CreateTable(
                 name: "Projects",
                 columns: table => new
@@ -20,7 +23,7 @@ namespace _2026_MT_Kudriavceva_A_E_Lab_2.Migrations
                     Name = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
                     FolderPath = table.Column<string>(type: "TEXT", maxLength: 500, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
                 },
                 constraints: table =>
                 {
@@ -42,7 +45,7 @@ namespace _2026_MT_Kudriavceva_A_E_Lab_2.Migrations
                     RamGb = table.Column<int>(type: "INTEGER", nullable: false),
                     Os = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
                 },
                 constraints: table =>
                 {
@@ -63,7 +66,7 @@ namespace _2026_MT_Kudriavceva_A_E_Lab_2.Migrations
                     TotalErrors = table.Column<int>(type: "INTEGER", nullable: false),
                     TotalWarnings = table.Column<int>(type: "INTEGER", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
                 },
                 constraints: table =>
                 {
@@ -88,7 +91,7 @@ namespace _2026_MT_Kudriavceva_A_E_Lab_2.Migrations
                     Code = table.Column<string>(type: "TEXT", maxLength: 50, nullable: true),
                     Message = table.Column<string>(type: "TEXT", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
                 },
                 constraints: table =>
                 {
@@ -115,6 +118,8 @@ namespace _2026_MT_Kudriavceva_A_E_Lab_2.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            ArgumentNullException.ThrowIfNull(migrationBuilder);
+
             migrationBuilder.DropTable(
                 name: "IssueLogs");
 

@@ -10,7 +10,7 @@ public class IssueLog : BaseEntity<int>
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int LogId { get; set; }
 
-    public override int Id => LogId;
+    public override int Id => this.LogId;
 
     [Required]
     public int ExecutionId { get; set; }
@@ -20,7 +20,7 @@ public class IssueLog : BaseEntity<int>
 
     [Required]
     [MaxLength(20)]
-    public string Severity { get; set; } = "Error"; 
+    public string Severity { get; set; } = "Error";
 
     [MaxLength(50)]
     public string? Code { get; set; }
@@ -33,6 +33,6 @@ public class IssueLog : BaseEntity<int>
 
     public override string ToLogString(string additionalInfo = "")
     {
-        return base.ToLogString($"[{Severity}] {Code}: {Message} {additionalInfo}");
+        return base.ToLogString($"[{this.Severity}] {this.Code}: {this.Message} {additionalInfo}");
     }
 }

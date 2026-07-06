@@ -1,45 +1,47 @@
 ﻿namespace Repositories;
 
-using Microsoft.EntityFrameworkCore;
 using Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 public class GenericRepository<TEntity, TKey> : IRepository<TEntity, TKey>
     where TEntity : class
 {
-    protected readonly ApplicationDbContext _context;
-    protected readonly DbSet<TEntity> _dbSet;
+    private readonly ApplicationDbContext context;
+    private readonly DbSet<TEntity> dbSet;
 
     public GenericRepository(ApplicationDbContext context)
     {
-        _context = context;
-        _dbSet = context.Set<TEntity>();
+        ArgumentNullException.ThrowIfNull(context);
+        this.context = context;
+        this.dbSet = context.Set<TEntity>();
     }
 
-    public async Task<TEntity?> GetByIdAsync(TKey id) => await _dbSet.FindAsync(id);
+    public async Task<TEntity?> GetByIdAsync(TKey id) => await this.dbSet.FindAsync(id).ConfigureAwait(false);
 
-    public async Task<IEnumerable<TEntity>> GetAllAsync() => await _dbSet.ToListAsync();
+    public async Task<IEnumerable<TEntity>> GetAllAsync() => await this.dbSet.ToListAsync().ConfigureAwait(false);
 
     public async Task AddAsync(TEntity entity)
     {
-        await _dbSet.AddAsync(entity);
-        await SaveChangesAsync();
+        await this.dbSet.AddAsync(entity).ConfigureAwait(false);
+        await this.SaveChangesAsync().ConfigureAwait(false);
     }
 
     public async Task UpdateAsync(TEntity entity)
     {
-        _dbSet.Update(entity);
-        await SaveChangesAsync();
+        this.dbSet.Update(entity);
+        await this.SaveChangesAsync().ConfigureAwait(false);
     }
 
     public async Task DeleteAsync(TKey id)
     {
-        var entity = await GetByIdAsync(id);
+        var entity = await this.GetByIdAsync(id).ConfigureAwait(false);
         if (entity != null)
         {
-            _dbSet.Remove(entity);
-            await SaveChangesAsync();
+            this.dbSet.Remove(entity);
+            await this.SaveChangesAsync().ConfigureAwait(false);
         }
     }
 
-    public async Task SaveChangesAsync() => await _context.SaveChangesAsync();
+    public async Task SaveChangesAsync() => await this.context.SaveChangesAsync().ConfigureAwait(false);
 }

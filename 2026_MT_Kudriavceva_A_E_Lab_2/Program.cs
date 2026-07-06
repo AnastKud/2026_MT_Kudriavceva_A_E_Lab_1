@@ -6,10 +6,11 @@ using Repositories;
 
 namespace Lab2;
 
-class Program
+internal class Program
 {
-    static async Task Main(string[] args)
+    private static async Task Main(string[] args)
     {
+        ArgumentNullException.ThrowIfNull(args);
         var configuration = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.json", optional: false)
@@ -20,7 +21,7 @@ class Program
             .Options;
 
         await using var context = new ApplicationDbContext(options);
-        await context.Database.MigrateAsync();
+        await context.Database.MigrateAsync().ConfigureAwait(false);
 
         using var unitOfWork = new UnitOfWork(context);
         var factory = new DefaultDataFactory();
@@ -28,18 +29,18 @@ class Program
         Console.WriteLine("Начало тестирования репозиториев...\n");
 
         var project = factory.CreateProject("DemoApplication", @"C:\Projects\DemoApp");
-        await unitOfWork.Projects.AddAsync(project);
+        await unitOfWork.Projects.AddAsync(project).ConfigureAwait(false);
         Console.WriteLine($" Проект создан: {project.Name} (ID: {project.ProjectId})");
 
         var buildStep = factory.CreateStep(project, "dotnet build", true, 1840);
-        await unitOfWork.PipelineSteps.AddAsync(buildStep);
+        await unitOfWork.PipelineSteps.AddAsync(buildStep).ConfigureAwait(false);
         Console.WriteLine($" Этап сборки сохранён (ID: {buildStep.ExecutionId})");
 
         var error = factory.CreateIssue(buildStep, "Error", "CS0246", "The type or namespace name 'XXX' could not be found");
         var warning = factory.CreateIssue(buildStep, "Warning", null, "Variable is assigned but never used");
 
-        await unitOfWork.IssueLogs.AddAsync(error);
-        await unitOfWork.IssueLogs.AddAsync(warning);
+        await unitOfWork.IssueLogs.AddAsync(error).ConfigureAwait(false);
+        await unitOfWork.IssueLogs.AddAsync(warning).ConfigureAwait(false);
         Console.WriteLine($" Добавлено {buildStep.IssueLogs.Count} логов");
 
         var metric = factory.CreateMetric(
@@ -51,7 +52,7 @@ class Program
             32,
             "Windows 11");
 
-        await unitOfWork.Metrics.AddAsync(metric);
+        await unitOfWork.Metrics.AddAsync(metric).ConfigureAwait(false);
         Console.WriteLine($"Метрика производительности сохранена. Efficiency: {metric.Efficiency:F2}");
 
         Console.WriteLine("\nВсё успешно сохранено в базу!");

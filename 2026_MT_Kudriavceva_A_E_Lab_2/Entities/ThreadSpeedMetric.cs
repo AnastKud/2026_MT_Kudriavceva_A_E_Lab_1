@@ -10,34 +10,34 @@ public class ThreadSpeedMetric : BaseEntity<int>
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int MetricId { get; set; }
 
-    public override int Id => MetricId;
+    public override int Id => this.MetricId;
 
     [Required]
     [MaxLength(300)]
     public string TestDescription { get; set; } = string.Empty;
 
     [Required]
-    public int LogicalCores { get; set; }
+    public int LogicalCores { get; }
 
     [Required]
-    public long SingleThreadTimeMs { get; set; }
+    public long SingleThreadTimeMs { get; }
 
     [Required]
-    public long ParallelTimeMs { get; set; }
+    public long ParallelTimeMs { get; }
 
     [NotMapped]
     public decimal Efficiency =>
-        ParallelTimeMs == 0 ? 0 : (decimal)SingleThreadTimeMs / ParallelTimeMs;
+        this.ParallelTimeMs == 0 ? 0 : (decimal)this.SingleThreadTimeMs / this.ParallelTimeMs;
 
     [Required]
-    public DateTime MeasuredAt { get; set; } = DateTime.UtcNow;
+    public DateTime MeasuredAt { get; } = DateTime.UtcNow;
 
     [Required]
     [MaxLength(200)]
     public string CpuModel { get; set; } = string.Empty;
 
     [Required]
-    public int RamGb { get; set; }
+    public int RamGb { get; }
 
     [Required]
     [MaxLength(100)]
@@ -45,6 +45,6 @@ public class ThreadSpeedMetric : BaseEntity<int>
 
     public override string ToLogString(string additionalInfo = "")
     {
-        return base.ToLogString($"Test={TestDescription}, Eff={Efficiency:F2} {additionalInfo}");
+        return base.ToLogString($"Test={this.TestDescription}, Eff={this.Efficiency:F2} {additionalInfo}");
     }
 }

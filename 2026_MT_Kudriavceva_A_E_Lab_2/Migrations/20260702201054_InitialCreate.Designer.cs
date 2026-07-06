@@ -15,7 +15,7 @@ namespace _2026_MT_Kudriavceva_A_E_Lab_2.Migrations
     partial class InitialCreate
     {
         /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.25");

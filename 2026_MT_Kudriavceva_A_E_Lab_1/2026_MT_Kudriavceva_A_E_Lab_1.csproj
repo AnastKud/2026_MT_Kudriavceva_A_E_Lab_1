@@ -17,4 +17,8 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="2026_MT_Kudriavceva_A_E_Lab_1\" />
+  </ItemGroup>
+
 </Project>

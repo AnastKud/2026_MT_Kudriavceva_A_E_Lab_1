@@ -10,12 +10,14 @@ public class DefaultDataFactory : IDataFactory
         {
             Name = name,
             FolderPath = folderPath,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow,
         };
     }
 
     public PipelineStepExecution CreateStep(Project project, string stepName, bool isSuccess, long durationMs)
     {
+        ArgumentNullException.ThrowIfNull(project);
+
         return new PipelineStepExecution
         {
             ProjectId = project.ProjectId,
@@ -23,12 +25,14 @@ public class DefaultDataFactory : IDataFactory
             StartedAt = DateTime.UtcNow,
             DurationMs = durationMs,
             IsSuccess = isSuccess,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow,
         };
     }
 
     public IssueLog CreateIssue(PipelineStepExecution execution, string severity, string? code, string message)
     {
+        ArgumentNullException.ThrowIfNull(execution);
+
         return new IssueLog
         {
             ExecutionId = execution.ExecutionId,
@@ -36,7 +40,7 @@ public class DefaultDataFactory : IDataFactory
             Severity = severity,
             Code = code,
             Message = message,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow,
         };
     }
 
@@ -49,17 +53,23 @@ public class DefaultDataFactory : IDataFactory
         int ramGb,
         string os)
     {
-        return new ThreadSpeedMetric
+        var metric = new ThreadSpeedMetric
         {
             TestDescription = testDescription,
-            LogicalCores = logicalCores,
-            SingleThreadTimeMs = singleThreadTimeMs,
-            ParallelTimeMs = parallelTimeMs,
             CpuModel = cpuModel,
-            RamGb = ramGb,
             Os = os,
-            MeasuredAt = DateTime.UtcNow,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow,
         };
+
+        typeof(ThreadSpeedMetric).GetProperty(nameof(ThreadSpeedMetric.LogicalCores))?
+            .SetValue(metric, logicalCores);
+        typeof(ThreadSpeedMetric).GetProperty(nameof(ThreadSpeedMetric.SingleThreadTimeMs))?
+            .SetValue(metric, singleThreadTimeMs);
+        typeof(ThreadSpeedMetric).GetProperty(nameof(ThreadSpeedMetric.ParallelTimeMs))?
+            .SetValue(metric, parallelTimeMs);
+        typeof(ThreadSpeedMetric).GetProperty(nameof(ThreadSpeedMetric.RamGb))?
+            .SetValue(metric, ramGb);
+
+        return metric;
     }
 }

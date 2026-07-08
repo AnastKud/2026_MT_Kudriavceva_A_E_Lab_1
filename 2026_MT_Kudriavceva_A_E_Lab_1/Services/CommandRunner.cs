@@ -1,11 +1,12 @@
 ﻿using System.Diagnostics;
+using System.Reflection.Emit;
+namespace Core;
 
 public class CommandRunner
 {
     public int Run(string command, string args, string workingDir, Logger logger)
     {
-        var process = new Process();
-
+        using var process = new Process();
         process.StartInfo.FileName = command;
         process.StartInfo.Arguments = args;
         process.StartInfo.WorkingDirectory = workingDir;
@@ -21,7 +22,7 @@ public class CommandRunner
             var error = process.StandardError.ReadToEnd();
 
             process.WaitForExit();
-
+            ArgumentNullException.ThrowIfNull(logger);
             if (!string.IsNullOrWhiteSpace(output))
                 logger.Info(output.Trim());
 
@@ -30,8 +31,21 @@ public class CommandRunner
 
             return process.ExitCode;
         }
-        catch (Exception ex)
+        catch (InvalidOperationException ex)
         {
+            ArgumentNullException.ThrowIfNull(logger);
+            logger.Error(ex.Message);
+            return -1;
+        }
+        catch (System.ComponentModel.Win32Exception ex)
+        {
+            ArgumentNullException.ThrowIfNull(logger);
+            logger.Error(ex.Message);
+            return -1;
+        }
+        catch (ArgumentException ex)
+        {
+            ArgumentNullException.ThrowIfNull(logger);
             logger.Error(ex.Message);
             return -1;
         }

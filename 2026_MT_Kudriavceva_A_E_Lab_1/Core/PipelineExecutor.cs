@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.ObjectModel;
 using System.IO;
+
+namespace Core;
 
 public class PipelineExecutor
 {
@@ -12,15 +14,16 @@ public class PipelineExecutor
         _logger = logger;
     }
 
-    public void Execute(List<Stage> stages, string targetDir)
+    public void Execute(Collection<Stage> stages, string targetDir)
     {
+        ArgumentNullException.ThrowIfNull(stages);
         var repoDir = Path.Combine(targetDir, "repo");
 
         foreach (var stage in stages)
         {
             _logger.Info($"Starting stage: {stage.Name}");
 
-            var workingDir = stage.Command == "git" && stage.Args.Contains("clone")
+            string workingDir = stage.Command == "git" && stage.Args.Contains("clone", StringComparison.Ordinal)
                 ? targetDir
                 : repoDir;
 

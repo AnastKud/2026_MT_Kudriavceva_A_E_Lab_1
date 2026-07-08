@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.IO;
-
+namespace Core;
 class Program
 {
     static void Main(string[] args)
@@ -34,15 +35,27 @@ class Program
             logger.Info("Pipeline started");
 
             var executor = new PipelineExecutor(new CommandRunner(), logger);
-            executor.Execute(config.Pipeline, targetDir);
+            executor.Execute(new Collection<Stage>(config.Pipeline), targetDir);
 
             logger.Info("Pipeline finished");
 
             Console.WriteLine($"Done. Log: {logPath}");
         }
-        catch (Exception ex)
+        catch (IOException ex)
         {
-            Console.WriteLine(ex.Message);
+            Console.WriteLine($"IO error: {ex.Message}");
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            Console.WriteLine($"Access error: {ex.Message}");
+        }
+        catch (ArgumentException ex)
+        {
+            Console.WriteLine($"Argument error: {ex.Message}");
+        }
+        catch (InvalidOperationException ex)
+        {
+            Console.WriteLine($"Operation error: {ex.Message}");
         }
     }
 }

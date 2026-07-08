@@ -1,8 +1,20 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+namespace Core;
 
 public class PipelineConfig
 {
-    public List<Stage> Pipeline { get; set; } = new();
+    public ReadOnlyCollection<Stage> Pipeline { get; }
+
+    public PipelineConfig()
+    {
+        Pipeline = new ReadOnlyCollection<Stage>([]);
+    }
+
+    public PipelineConfig(IEnumerable<Stage> stages)
+    {
+        Pipeline = new ReadOnlyCollection<Stage>(stages is List<Stage> list ? list : [.. stages]);
+    }
 }
 
 public class Stage

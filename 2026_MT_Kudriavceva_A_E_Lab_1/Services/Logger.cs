@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-
+namespace Core;
 public class Logger
 {
     private readonly string _path;
